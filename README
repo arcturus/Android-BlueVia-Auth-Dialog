@@ -1,0 +1,41 @@
+This is an android library project to use in conjunction
+with the android BlueVia SDK.
+
+This project provides an easy way of showing the user a
+dialog to retrieve the valid access token.
+
+See the example below:
+
+try {
+	new AuthDialog(this, "My App", new BlueviaOauthClient(this, Mode.HTTP, CONSUMER_KEY, CONSUMER_SECRET), new AuthDialogListener() {
+		
+		@Override
+		public void onError(AUTH_ERROR code) {
+			Log.d("BLUEVIA", "We couldn't get the token :( " + code);
+		}
+		
+		@Override
+		public void onComplete(Token result) {
+			SharedPreferences prefs = getSharedPreferences("preferences_file", MODE_PRIVATE);
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putString("oauth_token_key", result.getToken());
+			editor.putString("oauth_token_secret_key", result.getSecret());
+			editor.commit();
+			
+			Log.d("BLUEVIA", "We got the tokens!");
+		}
+	}).show();
+} catch (BlueviaClientException e) {
+	e.printStackTrace();
+}
+
+IMPORTANT NOTES:
+
+In order to work with this project, it will need the 
+Android BlueVia SDK as a project reference in eclipse.
+Please check the Android libraries references, and the 
+classpath, don forget to setup them for your system.
+
+It is possible to use the jar file provided from BlueVia?
+Yes, modify the libraries dependencies, and add that jar 
+to your classpath.
